@@ -5,11 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"path/filepath"
+	"simple-demo/model"
+	"simple-demo/service"
+	"strconv"
 )
 
 type VideoListResponse struct {
 	Response
-	VideoList []Video `json:"video_list"`
+	VideoList []model.Video `json:"video_list"`
 }
 
 // Publish check token then save upload file to public directory
@@ -50,10 +53,14 @@ func Publish(c *gin.Context) {
 
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
+	token := c.Query("token")
+	userID, _ := strconv.ParseUint(c.Query("user_id"), 10, 64)
+	fmt.Println(token, userID)
+	videos := service.GetPublishListByUserID(int64(userID))
 	c.JSON(http.StatusOK, VideoListResponse{
 		Response: Response{
 			StatusCode: 0,
 		},
-		VideoList: DemoVideos,
+		VideoList: videos,
 	})
 }

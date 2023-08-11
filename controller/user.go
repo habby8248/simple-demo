@@ -3,16 +3,17 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"simple-demo/model"
 	"sync/atomic"
 )
 
 // usersLoginInfo use map to store user info, and key is username+password for demo
 // user data will be cleared every time the server starts
 // test data: username=zhanglei, password=douyin
-var usersLoginInfo = map[string]User{
-	"zhangleidouyin": {
-		Id:            1,
-		Name:          "zhanglei",
+var usersLoginInfo = map[string]model.User{
+	"user2douyin": {
+		Id:            2,
+		Name:          "user2",
 		FollowCount:   10,
 		FollowerCount: 5,
 		IsFollow:      true,
@@ -48,7 +49,7 @@ func Register(c *gin.Context) {
 			Id:   userIdSequence,
 			Name: username,
 		}
-		usersLoginInfo[token] = newUser
+		usersLoginInfo[token] = model.User(newUser)
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: Response{StatusCode: 0},
 			UserId:   userIdSequence,
@@ -82,7 +83,7 @@ func UserInfo(c *gin.Context) {
 	if user, exist := usersLoginInfo[token]; exist {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: Response{StatusCode: 0},
-			User:     user,
+			User:     User(user),
 		})
 	} else {
 		c.JSON(http.StatusOK, UserResponse{

@@ -1,12 +1,21 @@
 package main
 
 import (
-	"github.com/RaymondCode/simple-demo/service"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"simple-demo/model"
 )
 
+func init() {
+	baseDBModel := model.BaseDBModel{}
+	db := baseDBModel.Connect()
+	if db == nil {
+		fmt.Println("连接失败")
+	}
+}
+
 func main() {
-	go service.RunMessageServer()
+	//go service.RunMessageServer()
 
 	r := gin.Default()
 
